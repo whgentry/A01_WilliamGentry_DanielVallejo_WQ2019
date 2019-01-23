@@ -90,7 +90,6 @@
 // MASTER_MODE = 0 : Application in slave mode
 //
 //*****************************************************************************
-#define MASTER_MODE      1
 
 #define SPI_IF_BIT_RATE  100000
 #define TR_BUFF_SIZE     100
@@ -101,11 +100,6 @@
 //*****************************************************************************
 //                 GLOBAL VARIABLES -- Start
 //*****************************************************************************
-static unsigned char g_ucTxBuff[TR_BUFF_SIZE];
-static unsigned char g_ucRxBuff[TR_BUFF_SIZE];
-static unsigned char ucTxBuffNdx;
-static unsigned char ucRxBuffNdx;
-
 #if defined(ccs)
 extern void (* const g_pfnVectors[])(void);
 #endif
@@ -115,228 +109,6 @@ extern uVectorEntry __vector_table;
 //*****************************************************************************
 //                 GLOBAL VARIABLES -- End
 //*****************************************************************************
-
-
-
-//*****************************************************************************
-//
-//! SPI Slave Interrupt handler
-//!
-//! This function is invoked when SPI slave has its receive register full or
-//! transmit register empty.
-//!
-//! \return None.
-//
-//*****************************************************************************
-static void SlaveIntHandler()
-{
-    unsigned long ulRecvData;
-    unsigned long ulStatus;
-
-    ulStatus = MAP_SPIIntStatus(GSPI_BASE,true);
-
-    MAP_SPIIntClear(GSPI_BASE,SPI_INT_RX_FULL|SPI_INT_TX_EMPTY);
-
-    if(ulStatus & SPI_INT_TX_EMPTY)
-    {
-        MAP_SPIDataPut(GSPI_BASE,g_ucTxBuff[ucTxBuffNdx%TR_BUFF_SIZE]);
-        ucTxBuffNdx++;
-    }
-
-    if(ulStatus & SPI_INT_RX_FULL)
-    {
-        MAP_SPIDataGetNonBlocking(GSPI_BASE,&ulRecvData);
-        g_ucTxBuff[ucRxBuffNdx%TR_BUFF_SIZE] = ulRecvData;
-        Report("%c",ulRecvData);
-        ucRxBuffNdx++;
-    }
-}
-
-//*****************************************************************************
-//
-//! SPI Master mode main loop
-//!
-//! This function configures SPI modelue as master and enables the channel for
-//! communication
-//!
-//! \return None.
-//
-//*****************************************************************************
-void MasterMain()
-{
-
-    unsigned long ulUserData;
-    unsigned long ulDummy;
-
-    //
-    // Initialize the message
-    //
-    memcpy(g_ucTxBuff,MASTER_MSG,sizeof(MASTER_MSG));
-
-    //
-    // Set Tx buffer index
-    //
-    ucTxBuffNdx = 0;
-    ucRxBuffNdx = 0;
-
-    //
-    // Reset SPI
-    //
-    MAP_SPIReset(GSPI_BASE);
-
-    //
-    // Configure SPI interface
-    //
-    MAP_SPIConfigSetExpClk(GSPI_BASE,MAP_PRCMPeripheralClockGet(PRCM_GSPI),
-                     SPI_IF_BIT_RATE,SPI_MODE_MASTER,SPI_SUB_MODE_0,
-                     (SPI_SW_CTRL_CS |
-                     SPI_4PIN_MODE |
-                     SPI_TURBO_OFF |
-                     SPI_CS_ACTIVEHIGH |
-                     SPI_WL_8));
-
-    //
-    // Enable SPI for communication
-    //
-    MAP_SPIEnable(GSPI_BASE);
-
-    //
-    // Print mode on uart
-    //
-    Message("Enabled SPI Interface in Master Mode\n\r");
-
-    //
-    // User input
-    //
-    Report("Press any key to transmit data....");
-
-    //
-    // Read a character from UART terminal
-    //
-    ulUserData = MAP_UARTCharGet(UARTA0_BASE);
-
-
-    //
-    // Send the string to slave. Chip Select(CS) needs to be
-    // asserted at start of transfer and deasserted at the end.
-    //
-    MAP_SPITransfer(GSPI_BASE,g_ucTxBuff,g_ucRxBuff,50,
-            SPI_CS_ENABLE|SPI_CS_DISABLE);
-
-    //
-    // Report to the user
-    //
-    Report("\n\rSend      %s",g_ucTxBuff);
-    Report("Received  %s",g_ucRxBuff);
-
-    //
-    // Print a message
-    //
-    Report("\n\rType here (Press enter to exit) :");
-
-    //
-    // Initialize variable
-    //
-    ulUserData = 0;
-
-    //
-    // Enable Chip select
-    //
-    MAP_SPICSEnable(GSPI_BASE);
-
-    //
-    // Loop until user "Enter Key" is
-    // pressed
-    //
-    while(ulUserData != '\r')
-    {
-        //
-        // Read a character from UART terminal
-        //
-        ulUserData = MAP_UARTCharGet(UARTA0_BASE);
-
-        //
-        // Echo it back
-        //
-        MAP_UARTCharPut(UARTA0_BASE,ulUserData);
-
-        //
-        // Push the character over SPI
-        //
-        MAP_SPIDataPut(GSPI_BASE,ulUserData);
-
-        //
-        // Clean up the receive register into a dummy
-        // variable
-        //
-        MAP_SPIDataGet(GSPI_BASE,&ulDummy);
-    }
-
-    //
-    // Disable chip select
-    //
-    MAP_SPICSDisable(GSPI_BASE);
-}
-
-//*****************************************************************************
-//
-//! SPI Slave mode main loop
-//!
-//! This function configures SPI modelue as slave and enables the channel for
-//! communication
-//!
-//! \return None.
-//
-//*****************************************************************************
-void SlaveMain()
-{
-    //
-    // Initialize the message
-    //
-    memcpy(g_ucTxBuff,SLAVE_MSG,sizeof(SLAVE_MSG));
-
-    //
-    // Set Tx buffer index
-    //
-    ucTxBuffNdx = 0;
-    ucRxBuffNdx = 0;
-
-    //
-    // Reset SPI
-    //
-    MAP_SPIReset(GSPI_BASE);
-
-    //
-    // Configure SPI interface
-    //
-    MAP_SPIConfigSetExpClk(GSPI_BASE,MAP_PRCMPeripheralClockGet(PRCM_GSPI),
-                     SPI_IF_BIT_RATE,SPI_MODE_SLAVE,SPI_SUB_MODE_0,
-                     (SPI_HW_CTRL_CS |
-                     SPI_4PIN_MODE |
-                     SPI_TURBO_OFF |
-                     SPI_CS_ACTIVEHIGH |
-                     SPI_WL_8));
-
-    //
-    // Register Interrupt Handler
-    //
-    MAP_SPIIntRegister(GSPI_BASE,SlaveIntHandler);
-
-    //
-    // Enable Interrupts
-    //
-    MAP_SPIIntEnable(GSPI_BASE,SPI_INT_RX_FULL|SPI_INT_TX_EMPTY);
-
-    //
-    // Enable SPI for communication
-    //
-    MAP_SPIEnable(GSPI_BASE);
-
-    //
-    // Print mode on uart
-    //
-    Message("Enabled SPI Interface in Slave Mode\n\rReceived : ");
-}
 
 //*****************************************************************************
 //
@@ -424,17 +196,42 @@ void main()
     Adafruit_Init();
 
     while(1)
-    {
+    {   // Printing character setup
+        fillScreen(BLACK);
+        setTextWrap(1);
+        setTextSize(1);
+        setTextColor(GREEN,BLACK);
+
+        // Test all characters
+        setCursor(0,0);
+        fillScreen(BLACK);
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        for (j = 0; j < 64; j = j+8)
+        {
+            for (i = 0; i < 128; i = i+8)
+            {
+                drawChar(i,j,count++,WHITE,BLACK,1);
+            }
+        }
+
+        // Test Display Text
+        setCursor(0,120);
+        Outstr("Hello World!");
+        delay(1000);
+
+        // Test Display Patterns
+        lcdTestPattern(); // Horizontal Lines
+        lcdTestPattern2(); // Vertical Lines
+        testlines(WHITE);
         testfastlines(YELLOW, GREEN);
         testdrawrects(RED);
         testfillrects(WHITE,BLUE);
         testfillcircles(YELLOW,RED);
         testdrawcircles(MAGENTA,CYAN);
-        testtriangles();
         testroundrects();
-        testlines(WHITE);
-        lcdTestPattern();
-        lcdTestPattern2();
+        testtriangles();
 
     }
 }

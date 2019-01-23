@@ -460,3 +460,27 @@ Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.
 
 !ENTRY com.ti.ccstudio.debug 4 0 2019-01-22 20:09:03.980
 !MESSAGE Stellaris In-Circuit Debug Interface_0/Cortex_M4_0 - WARNING: opCode alignment dropped! (Requested address 0x2000588f | aligned address 0x20005890)
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-22 20:34:39.383
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/spi.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-22 20:34:39.430
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-22 20:47:41.265
+!MESSAGE DS_ERROR: Cortex_M4_0: Error 
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-22 20:47:41.307
+!MESSAGE DS_ERROR: Cortex_M4_0: Unable to determine target status after 20 attempts
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-22 21:00:01.442
+!MESSAGE DS_ERROR: Cortex_M4_0: Error: Debug Port error occurred.
+
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-22 21:00:02.151
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/spi.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-22 21:00:02.240
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c

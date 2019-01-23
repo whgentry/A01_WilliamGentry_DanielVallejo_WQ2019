@@ -359,22 +359,30 @@ void fillTriangle ( int x0, int y0,
     drawFastHLine(a, y, b-a+1, color);
   }
 }
-/*
+
 void drawBitmap(int x, int y,
 			      const unsigned char *bitmap, int w, int h,
 			      unsigned int color) {
 
-  int i, j, byteWidth = (w + 7) / 8;
+      int i, j, k;
 
-  for(j=0; j<h; j++) {
-    for(i=0; i<w; i++ ) {
-      if(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
-        drawPixel(x+i, y+j, color);
+      for(j=0; j<h; j++) {
+            for(i=0; i<w; i++ ) {
+                int currentByte = *bitmap;
+                bitmap++;
+                for(k=0; k<8; k++) {
+                    if(currentByte & 0x01)
+                    {
+                        drawPixel(x+i+k, y+j, color);
+                    }
+                    currentByte = currentByte >> 1;
+                }
+            }
       }
-    }
-  }
+      return;
 }
-*/
+
+
 // Draw a 1-bit color bitmap at the specified x, y position from the
 // provided bitmap buffer (must be PROGMEM memory) using color as the
 // foreground color and bg as the background color.
