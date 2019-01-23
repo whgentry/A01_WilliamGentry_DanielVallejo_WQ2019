@@ -295,3 +295,168 @@ Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.
 
 !ENTRY org.eclipse.cdt.core 1 0 2019-01-15 20:27:11.743
 !MESSAGE Indexed 'spi_demo' (6 sources, 26 headers) in 0.85 sec: 1,070 declarations; 2,049 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+!SESSION 2019-01-17 19:20:56.514 -----------------------------------------------
+eclipse.buildId=4.7.3.M20180301-0715
+java.version=1.8.0_112
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 4 0 2019-01-17 19:45:04.765
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2019-01-17 19:45:04.774
+!MESSAGE debugServerDir=C:/ti/ccsv8/ccs_base/DebugServer
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-01-17 19:45:37.805
+!MESSAGE Enablement expression is missing for descriptor type org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-01-17 19:45:37.905
+!MESSAGE Enablement expression is missing for config provider for org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-01-17 19:45:37.977
+!MESSAGE Enablement expression is missing for config provider for org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:39.959
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:39.983
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.019
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.050
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.062
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.127
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.195
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.266
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.342
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-17 19:45:40.742
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2019-01-17 19:46:05.045
+!MESSAGE No repository found at file:/C:/Users/willy/AppData/Local/Temp/traceplugin-Repo/.
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-17 20:47:15.213
+!MESSAGE DS_ERROR: Cortex_M4_0: Error: Connection with the target was unexpectedly lost.
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-17 20:59:59.132
+!MESSAGE DS_ERROR: Cortex_M4_0: Error 
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-17 20:59:59.169
+!MESSAGE DS_ERROR: Cortex_M4_0: Unable to determine target status after 20 attempts
+
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:18:50.902
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/spi.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:18:50.987
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:29:35.285
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/spi.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:29:35.338
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:32:40.417
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/spi.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:32:40.470
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:35:39.515
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/spi.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:35:39.568
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:38:38.939
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/uart.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:38:39.002
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/cpu.c
+
+!ENTRY org.eclipse.cdt.dsf.ui 2 0 2019-01-17 21:38:39.039
+!MESSAGE Unable to locate file: D:/R1/git/source-1p2-rahul/driverlib/interrupt.c
+!SESSION 2019-01-22 19:08:16.037 -----------------------------------------------
+eclipse.buildId=4.7.3.M20180301-0715
+java.version=1.8.0_112
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 4 0 2019-01-22 19:08:31.217
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2019-01-22 19:08:31.228
+!MESSAGE debugServerDir=C:/ti/ccsv8/ccs_base/DebugServer
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-01-22 19:09:03.311
+!MESSAGE Enablement expression is missing for descriptor type org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-01-22 19:09:03.410
+!MESSAGE Enablement expression is missing for config provider for org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-01-22 19:09:03.460
+!MESSAGE Enablement expression is missing for config provider for org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.420
+!MESSAGE constructor
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.441
+!MESSAGE done with directories
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.457
+!MESSAGE loading ti_logger
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.475
+!MESSAGE Platform os: win32
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.486
+!MESSAGE loading cToolsIF
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.537
+!MESSAGE loading cTools
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.604
+!MESSAGE loading TraceFactory
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.658
+!MESSAGE loading sqlite3
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:05.753
+!MESSAGE loading CloudTrace
+
+!ENTRY com.ti.dbgtrc.webapp.CloudTraceInterface 0 0 2019-01-22 19:09:06.051
+!MESSAGE CloudTrace interface loaded
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2019-01-22 19:09:32.870
+!MESSAGE No repository found at file:/C:/Users/willy/AppData/Local/Temp/traceplugin-Repo/.
+
+!ENTRY org.eclipse.cdt.core 1 0 2019-01-22 19:25:12.483
+!MESSAGE Indexed 'Lab2_rev2' (4 sources, 26 headers) in 1.25 sec: 1,017 declarations; 1,845 references; 0 unresolved inclusions; 0 syntax errors; 2 unresolved names (0.07%)
+
+!ENTRY com.ti.ccstudio.debug 1 0 2019-01-22 20:08:15.447
+!MESSAGE DS_ERROR: Cortex_M4_0: Error: Connection with the target was unexpectedly lost.
+
+
+!ENTRY com.ti.ccstudio.debug 4 0 2019-01-22 20:09:03.980
+!MESSAGE Stellaris In-Circuit Debug Interface_0/Cortex_M4_0 - WARNING: opCode alignment dropped! (Requested address 0x2000588f | aligned address 0x20005890)
