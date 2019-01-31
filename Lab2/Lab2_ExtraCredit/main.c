@@ -233,29 +233,6 @@ void main()
 
     // set to 16g
     ACC_WriteReg(0x0F,0x0A);
-    delay(10);
-    // Set offset target to 1 for y
-    ACC_WriteReg(0x37,0x00);
-    delay(10);
-    // Reset offset values
-    ACC_WriteReg(0x36,0x80);
-    delay(10);
-
-    // Trigger X offset calc
-    ACC_WriteReg(0x36,0x20);
-    delay(10);
-    // Wait for finish
-    while((0x10 & ACC_ReadReg(0x36)) == 0);
-    // Trigger Y offset calc
-    ACC_WriteReg(0x36,0x40);
-    delay(10);
-    // Wait for finish
-    while((0x10 & ACC_ReadReg(0x36)) == 0);
-    // Trigger Z offset calc
-    ACC_WriteReg(0x36,0x60);
-    delay(10);
-    // Wait for finish
-    while((0x10 & ACC_ReadReg(0x36)) == 0);
 
     while(1)
     {
