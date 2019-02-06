@@ -35,11 +35,7 @@
 
 //*****************************************************************************
 //
-// Application Name     - SPI Demo
-// Application Overview - The demo application focuses on showing the required 
-//                        initialization sequence to enable the CC3200 SPI 
-//                        module in full duplex 4-wire master and slave mode(s).
-// Application Details  -
+// Application Name     - Display Demo
 // http://processors.wiki.ti.com/index.php/CC32xx_SPI_Demo
 // or
 // docs\examples\CC32xx_SPI_Demo.pdf
