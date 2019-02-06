@@ -55,13 +55,12 @@ extern uVectorEntry __vector_table;
 #endif
 
 // My variables
-volatile uint32_t pulse_time = 0;
-volatile uint32_t button_code = 0;
-volatile int8_t button_num = 0;
+uint32_t code_current = 0;
+uint32_t code_prev = 0;
+char out_str[128] = "";
 //*****************************************************************************
 //                 GLOBAL VARIABLES -- End
 //*****************************************************************************
-
 
 //*****************************************************************************
 //
@@ -77,11 +76,12 @@ volatile int8_t button_num = 0;
 static void
 GPIOA1IntHandler(void)
 {
-    static uint32_t reading_signal = 0;
     static uint32_t bit_count = 0;
-    static uint32_t bit_mask = TV_BIT_MASK_START;
     static uint32_t current_reading = 0;
+    static uint8_t  data_repeat = 0;
+
     unsigned long ulStatus;
+    uint32_t pulse_time;
 
     pulse_time = TICKS_TO_MILLISECONDS(TimerValueGet(TIMERA0_BASE, TIMER_A));
     TimerValueSet(TIMERA0_BASE, TIMER_A, 0);
@@ -89,34 +89,28 @@ GPIOA1IntHandler(void)
     switch(pulse_time)
     {
     case(TV_STATE_START):
-        reading_signal = 1;
         bit_count = 0;
-        bit_mask = TV_BIT_MASK_START;
         current_reading = 0;
         break;
     case(TV_STATE_ONE):
-        current_reading |= ((bit_mask >> bit_count));
+        current_reading |= ((TV_BIT_MASK_START >> bit_count));
         bit_count++;
         break;
     case(TV_STATE_ZERO):
         bit_count++;
         break;
+    case(TV_STATE_REPEAT):
+        data_repeat = 1;
+        break;
     default:
-        reading_signal = 1;
         bit_count = 0;
-        bit_mask = TV_BIT_MASK_START;
         current_reading = 0;
+        data_repeat = 0;
         break;
     }
 
-    if (bit_count == 24) {
-//        Message("Button Datagram Read\n\r");
-        button_code = current_reading;
-
-        reading_signal = 1;
-        bit_count = 0;
-        bit_mask = TV_BIT_MASK_START;
-        current_reading = 0;
+    if (bit_count == 24 && !data_repeat) {
+        button_code_set(current_reading);
     }
 
     // Clear all interrupts for Timer unit 0.
@@ -145,9 +139,13 @@ IntIRReceiver_Init(void)
     MAP_GPIOIntClear(IR_BASE, IR_PIN);
     MAP_GPIOIntEnable(IR_BASE, IR_PIN);
 
-    // Setup Configure Timer
+    // Setup Configure Timer For signal Read
     Timer_IF_Init(PRCM_TIMERA0, TIMERA0_BASE, TIMER_CFG_PERIODIC_UP, TIMER_A, 0);
     Timer_IF_Start(TIMERA0_BASE, TIMER_A, 0xFFFFFFFF);
+
+    // Setup Timer for character select timeout
+    Timer_IF_Init(PRCM_TIMERA1, TIMERA1_BASE, TIMER_CFG_ONE_SHOT_UP, TIMER_A, 0);
+    Timer_IF_Start(TIMERA1_BASE, TIMER_A, 0xFFFFFFFF);
 }
 
 //*****************************************************************************
@@ -228,25 +226,59 @@ void main()
 
     // Text Setup
     setTextWrap(1);
-    setTextSize(18);
-    setTextColor(CYAN,BLACK);
+    setTextSize(1);
+    setTextColor(RED,WHITE);
 
-
-    char str[32] = "";
-    uint32_t button_prev;
+    char char_current;
+    uint32_t char_delay;
 
     while(1)
     {
-        UtilsDelay(1000000);
-        if (button_code != button_prev) {
-            sprintf(str, "%x", button_decode(button_code));
-            Message(str);
-            fillScreen(BLACK);
-            setCursor(0,0);
-            Outstr(str);
-        }
+        // This Function call clears the button ready value //
+        code_current = button_code_get();
+        char_delay = TICKS_TO_MILLISECONDS(TimerValueGet(TIMERA1_BASE, TIMER_A));
 
-        button_prev = button_code;
+        if (code_current || char_delay > CHAR_TIMEOUT) {
+            TimerValueSet(TIMERA1_BASE, TIMER_A, 0);
+            char_current = button_char_get(code_current);
+            int len = strlen(out_str);
+//            drawChar(0,120,char_current,YELLOW,BLACK,1);
+
+            switch(char_current)
+            {
+            case 0xFF:  // Caps or bad code
+                break;
+            case 0x7F:  // Delete
+                if (len) {
+                    out_str[len-1] = '\0';
+                }
+                break;
+            default:
+                if ( (len == 0) ||
+                     (code_current != code_prev) ||
+                     (char_delay > CHAR_TIMEOUT) )
+                {
+                    out_str[len] = char_current;
+                    out_str[len+1] = '\0';
+                } else {
+                    out_str[len-1] = char_current;
+                }
+                break;
+            }
+
+            if (char_current == '\0') {
+                // send the out_str over uart
+                fillRect(0,0,128,64,WHITE);
+                out_str[0] = '\0';
+            } else if ( !(char_delay > CHAR_TIMEOUT)) {
+                Message(out_str);
+                setCursor(0,0);
+                fillRect(0,0,128,64,WHITE);
+                Outstr(out_str);
+            }
+
+            code_prev = code_current;
+        }
     }
 }
 

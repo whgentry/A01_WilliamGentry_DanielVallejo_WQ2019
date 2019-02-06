@@ -54,4 +54,6 @@
 #define MILLISECONDS_TO_TICKS(ms)   ((SYS_CLK/1000) * (ms))
 #define TICKS_TO_MILLISECONDS(ms)   ((ms) / (SYS_CLK/1000))
 
+#define CHAR_TIMEOUT 1000
+
 #endif /* PROJECT_H_ */

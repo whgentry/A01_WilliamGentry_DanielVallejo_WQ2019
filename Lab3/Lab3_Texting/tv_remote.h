@@ -37,13 +37,19 @@
 #define TV_PULSE_0_MAX  2000
 
 // State machine
-#define TV_STATE_START 4
-#define TV_STATE_ONE   3
-#define TV_STATE_ZERO  1
+#define TV_STATE_START  4
+#define TV_STATE_ONE    3
+#define TV_STATE_ZERO   1
+#define TV_STATE_REPEAT 36
 
 
 ///// Functions /////
 int8_t button_decode(uint32_t code);
-
+void button_ready_clear(void);
+void button_ready_set(void);
+void button_code_set(uint32_t code);
+uint32_t button_code_get();
+char button_char_get(uint32_t code);
+void button_char_pos_inc(uint32_t code, uint8_t *pos);
 
 #endif /* TV_REMOTE_H_ */
