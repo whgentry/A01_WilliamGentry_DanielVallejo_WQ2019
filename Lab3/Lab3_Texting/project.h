@@ -44,9 +44,20 @@
 #include "pinmux.h"
 
 // Interrupt Port and pin
-#define INT_IR_BASE INT_GPIOA1
-#define IR_BASE     GPIOA1_BASE
-#define IR_PIN      GPIO_PIN_2
+#define INT_IR_BASE     INT_GPIOA1
+#define IR_BASE         GPIOA1_BASE
+#define IR_PIN          GPIO_PIN_2
+
+// UART Macros
+#define UART_T_BASE     UARTA1_BASE
+#define INT_UART_T      INT_UARTA1
+#define UART_T_PERIPH   PRCM_UARTA1
+#define UART_T_TX       0
+#define UART_T_RX       0
+
+//#define UART_BAUD_RATE  115200
+//#define SYSCLK          80000000
+
 
 // Timer Macros
 #define MICROSECONDS_TO_TICKS(ms)   ((SYS_CLK/1000000) * (ms))

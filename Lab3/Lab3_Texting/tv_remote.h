@@ -50,6 +50,6 @@ void button_ready_set(void);
 void button_code_set(uint32_t code);
 uint32_t button_code_get();
 char button_char_get(uint32_t code);
-void button_char_pos_inc(uint32_t code, uint8_t *pos);
+void button_char_pos_inc(uint32_t code);
 
 #endif /* TV_REMOTE_H_ */

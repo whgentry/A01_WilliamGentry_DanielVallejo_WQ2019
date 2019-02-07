@@ -11,6 +11,7 @@ static uint32_t button_code = 0;
 static uint32_t button_code_prev = 0;
 static int8_t button_num = 0;
 static int8_t button_ready = 0;
+static uint8_t button_char_pos = 0;
 
 // Multi Tap Character arrays
 char button_char_2[4] = "abc";
@@ -50,15 +51,14 @@ uint32_t button_code_get()
 
 char button_char_get(uint32_t code)
 {
-    static uint8_t char_pos = 0;
     static uint32_t code_prev = 0;
     static char char_caps = 0;
 
     // increment char pos if same button is pressed
     if (code == code_prev) {
-        button_char_pos_inc(code, &char_pos);
+        button_char_pos_inc(code);
     } else {
-        char_pos = 0;
+        button_char_pos = 0;
     }
     code_prev = code;
 
@@ -74,31 +74,31 @@ char button_char_get(uint32_t code)
         }
         return 0xFF;
     case TV_BUTTON_2:
-        return (button_char_2[char_pos] - char_caps);
+        return (button_char_2[button_char_pos] - char_caps);
     case TV_BUTTON_3:
-        return (button_char_3[char_pos] - char_caps);
+        return (button_char_3[button_char_pos] - char_caps);
     case TV_BUTTON_4:
-        return (button_char_4[char_pos] - char_caps);
+        return (button_char_4[button_char_pos] - char_caps);
     case TV_BUTTON_5:
-        return (button_char_5[char_pos] - char_caps);
+        return (button_char_5[button_char_pos] - char_caps);
     case TV_BUTTON_6:
-        return (button_char_6[char_pos] - char_caps);
+        return (button_char_6[button_char_pos] - char_caps);
     case TV_BUTTON_7:
-        return (button_char_7[char_pos] - char_caps);
+        return (button_char_7[button_char_pos] - char_caps);
     case TV_BUTTON_8:
-        return (button_char_8[char_pos] - char_caps);
+        return (button_char_8[button_char_pos] - char_caps);
     case TV_BUTTON_9:
-        return (button_char_9[char_pos] - char_caps);
+        return (button_char_9[button_char_pos] - char_caps);
     case TV_BUTTON_LAST:
         return 0x7F;
     case TV_BUTTON_MUTE:
-        return '\0';
+        return '\n';
     default:
         return 0xFF;
     }
 }
 
-void button_char_pos_inc(uint32_t code, uint8_t *pos)
+void button_char_pos_inc(uint32_t code)
 {
     switch(code)
     {
@@ -108,11 +108,11 @@ void button_char_pos_inc(uint32_t code, uint8_t *pos)
     case TV_BUTTON_5:
     case TV_BUTTON_6:
     case TV_BUTTON_8:
-        *pos = ++(*pos) % 3;
+        button_char_pos = ++button_char_pos % 3;
         break;
     case TV_BUTTON_7:
     case TV_BUTTON_9:
-        *pos = ++(*pos) % 4;
+        button_char_pos = ++button_char_pos % 4;
         break;
     case TV_BUTTON_LAST:
     case TV_BUTTON_MUTE:

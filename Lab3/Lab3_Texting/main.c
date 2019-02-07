@@ -58,10 +58,61 @@ extern uVectorEntry __vector_table;
 uint32_t code_current = 0;
 uint32_t code_prev = 0;
 char out_str[128] = "";
+char in_str[128] = "";
 //*****************************************************************************
 //                 GLOBAL VARIABLES -- End
 //*****************************************************************************
 
+// Sends message over UART_TEXT
+void
+Send_Text(const char *str)
+{
+    if(str != NULL)
+    {
+        while(*str!='\0')
+        {
+            MAP_UARTCharPut(UART_T_BASE,*str++);
+        }
+    }
+}
+
+//*****************************************************************************
+//
+//! \UART_T_IntHandler
+//!
+//! Handles interrupts for UART_T,
+//!
+//! \param None.
+//!
+//! \return None.
+//
+//*****************************************************************************
+static void
+UART_T_IntHandler(void)
+{
+    MAP_UARTIntClear(UART_T_BASE, UART_INT_RX);
+
+    static int iLen = 0;
+
+    // Collect all characters on UART
+    while(MAP_UARTCharsAvail(UART_T_BASE)) {
+        in_str[iLen++] = MAP_UARTCharGetNonBlocking(UART_T_BASE);
+        in_str[iLen] = '\0';
+    }
+
+//    MAP_UARTCharPut(UART_T_BASE, char_current);
+
+    if (in_str[iLen-1] == '\n') {
+        in_str[iLen-1] = '\0';
+        iLen = 0;
+        setCursor(0,64);
+        setTextColor(RED,BLACK);
+        fillRect(0,64,128,64,BLACK);
+        Outstr(in_str);
+    }
+
+    return;
+}
 //*****************************************************************************
 //
 //! \GPIOA1IntHandler
@@ -85,6 +136,10 @@ GPIOA1IntHandler(void)
 
     pulse_time = TICKS_TO_MILLISECONDS(TimerValueGet(TIMERA0_BASE, TIMER_A));
     TimerValueSet(TIMERA0_BASE, TIMER_A, 0);
+
+    // Clear all interrupts for Timer unit 0.
+    ulStatus = MAP_GPIOIntStatus(IR_BASE, true);
+    MAP_GPIOIntClear(IR_BASE, ulStatus);
 
     switch(pulse_time)
     {
@@ -113,10 +168,6 @@ GPIOA1IntHandler(void)
         button_code_set(current_reading);
     }
 
-    // Clear all interrupts for Timer unit 0.
-    ulStatus = MAP_GPIOIntStatus(IR_BASE, true);
-    MAP_GPIOIntClear(IR_BASE, ulStatus);
-
     // Alert to the user
     //Message("Completed GPIOA1 Interrupt Handler \n\r");
 }
@@ -132,12 +183,22 @@ GPIOA1IntHandler(void)
 static void
 IntIRReceiver_Init(void)
 {
-    // GPIO Interrupt Intialization
+    // GPIO Interrupt Initialization
     MAP_IntPrioritySet(INT_IR_BASE, INT_PRIORITY_LVL_0);
     MAP_GPIOIntTypeSet(IR_BASE, IR_PIN, GPIO_RISING_EDGE);
     MAP_GPIOIntRegister(IR_BASE, GPIOA1IntHandler);
     MAP_GPIOIntClear(IR_BASE, IR_PIN);
     MAP_GPIOIntEnable(IR_BASE, IR_PIN);
+
+    // Setup UART interrupt
+    MAP_UARTConfigSetExpClk(UART_T_BASE,MAP_PRCMPeripheralClockGet(UART_T_PERIPH),
+                      UART_BAUD_RATE, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
+                       UART_CONFIG_PAR_NONE));
+    MAP_UARTFIFODisable(UART_T_BASE);
+    MAP_IntPrioritySet(INT_UART_T, INT_PRIORITY_LVL_1);
+    MAP_UARTIntRegister(UART_T_BASE,UART_T_IntHandler);
+    MAP_UARTIntClear(UART_T_BASE, UART_INT_RX);
+    MAP_UARTIntEnable(UART_T_BASE, UART_INT_RX);
 
     // Setup Configure Timer For signal Read
     Timer_IF_Init(PRCM_TIMERA0, TIMERA0_BASE, TIMER_CFG_PERIODIC_UP, TIMER_A, 0);
@@ -202,10 +263,10 @@ void main()
     MAP_PRCMPeripheralClkEnable(PRCM_GSPI,PRCM_RUN_MODE_CLK);
 
     // Initialising the Terminal.
-    InitTerm();
+//    InitTerm();
 
     // Clearing the Terminal.
-    ClearTerm();
+//    ClearTerm();
 
     // Display the Banner
 //    Message("\n\n\n\r");
@@ -223,11 +284,12 @@ void main()
     // Initialize Display
     Adafruit_Init();
     fillScreen(BLACK);
+    drawLine(0,63,127,63,WHITE);
 
     // Text Setup
     setTextWrap(1);
     setTextSize(1);
-    setTextColor(RED,WHITE);
+    setTextColor(RED,BLACK);
 
     char char_current;
     uint32_t char_delay;
@@ -238,7 +300,7 @@ void main()
         code_current = button_code_get();
         char_delay = TICKS_TO_MILLISECONDS(TimerValueGet(TIMERA1_BASE, TIMER_A));
 
-        if (code_current || char_delay > CHAR_TIMEOUT) {
+        if (code_current) {
             TimerValueSet(TIMERA1_BASE, TIMER_A, 0);
             char_current = button_char_get(code_current);
             int len = strlen(out_str);
@@ -255,8 +317,7 @@ void main()
                 break;
             default:
                 if ( (len == 0) ||
-                     (code_current != code_prev) ||
-                     (char_delay > CHAR_TIMEOUT) )
+                     (code_current != code_prev))
                 {
                     out_str[len] = char_current;
                     out_str[len+1] = '\0';
@@ -266,18 +327,24 @@ void main()
                 break;
             }
 
-            if (char_current == '\0') {
+            if (char_current == '\n') {
                 // send the out_str over uart
-                fillRect(0,0,128,64,WHITE);
+                MAP_UARTIntDisable(UART_T_BASE, UART_INT_RX);
+                fillRect(0,0,128,63,BLACK);
+                MAP_UARTIntEnable(UART_T_BASE, UART_INT_RX);
+                // Reset text screen
+                Send_Text(out_str);
                 out_str[0] = '\0';
-            } else if ( !(char_delay > CHAR_TIMEOUT)) {
-                Message(out_str);
+            } else {
                 setCursor(0,0);
-                fillRect(0,0,128,64,WHITE);
+                setTextColor(GREEN,BLACK);
+                fillRect(0,0,128,63,BLACK);
                 Outstr(out_str);
             }
 
             code_prev = code_current;
+        } else if (char_delay > CHAR_TIMEOUT) {
+            code_prev = 0;
         }
     }
 }
