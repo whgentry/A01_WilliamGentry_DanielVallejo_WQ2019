@@ -39,7 +39,7 @@
       <Type>blob</Type>
       <Storage>SFLASH</Storage>
       <MaxSize>32768</MaxSize>
-      <url>C:\Users\William\OneDrive - UC Davis\Documents\_UCDavis\EEC_172\LABS\Lab3\Lab3_Texting\Release\Lab3_Texting.bin</url>
+      <url>C:\Users\William\OneDrive - UC Davis\Documents\_UCDavis\EEC_172\LABS\Lab4\Lab4_Texting\Release\Lab4_Texting.bin</url>
       <mode>
          <ModeEntry name="Rollback" checked="true"/>
          <ModeEntry name="Secured" checked="false"/>
