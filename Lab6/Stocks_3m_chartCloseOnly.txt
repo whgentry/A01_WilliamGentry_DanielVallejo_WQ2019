@@ -1,0 +1,1 @@
+https://sandbox.iexapis.com/beta/stock/aapl/chart/3m?chartCloseOnly=true&token=Tpk_2a8d73c2882c4ba786b78d092c310a01

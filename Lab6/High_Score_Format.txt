@@ -1,0 +1,11 @@
+{
+  "desired": {
+    "var": "j",
+    "HighScores" : [
+      {"name":"Bill", "score":10}
+    ]
+  },
+  "delta": {
+    "var": "j"
+  }
+}
